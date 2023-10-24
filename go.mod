@@ -1,5 +1,5 @@
-module gitee.com/baixudong/tree
+module github.com/gospider007/tree
 
-go 1.21.0
+go 1.21.3
 
-require gitee.com/baixudong/kinds v0.0.0-20230726070402-0bc6b1ebb086
+require github.com/gospider007/kinds v0.0.0-20231015025159-69ab7d8d9b94

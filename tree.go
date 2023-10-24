@@ -4,7 +4,7 @@ import (
 	"sort"
 	"sync"
 
-	"gitee.com/baixudong/kinds"
+	"github.com/gospider007/kinds"
 )
 
 type Client struct {
