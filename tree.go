@@ -30,20 +30,17 @@ func (obj *Client) Add(words string) {
 	obj.lock.Lock()
 	defer obj.lock.Unlock()
 	wordrunes := []rune(words)
+	word_one := wordrunes[0]
 	wordrune_str := wordrunes[1:]
-	value, ok := obj.dataStr[wordrunes[0]]
+	lenData, ok := obj.dataLen[word_one]
 	if ok {
-		value.Add(string(wordrune_str))
+		lenData.Add(len(wordrune_str))
+		obj.dataStr[word_one].Add(string(wordrune_str))
 	} else {
-		obj.dataStr[wordrunes[0]] = kinds.NewSet(string(wordrune_str))
+		obj.dataLen[word_one] = kinds.NewSet(len(wordrune_str))
+		obj.dataStr[word_one] = kinds.NewSet(string(wordrune_str))
 	}
-	value2, ok := obj.dataLen[wordrunes[0]]
-	if ok {
-		value2.Add(len(wordrune_str))
-	} else {
-		obj.dataLen[wordrunes[0]] = kinds.NewSet(len(wordrune_str))
-	}
-	obj.dataSortKeys.Add(wordrunes[0])
+	obj.dataSortKeys.Add(word_one)
 }
 func (obj *Client) sort() {
 	if obj.dataSortKeys.Len() == 0 {
