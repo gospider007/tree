@@ -23,6 +23,7 @@ func NewClient() *Client {
 		dataSortKeys: kinds.NewSet[rune](),
 	}
 }
+
 func (obj *Client) Add(words string) {
 	if words == "" {
 		return
