@@ -69,10 +69,14 @@ func (obj *Client) Add(words string) {
 		obj.lock.Unlock()
 	}
 }
-func (obj *Client) add(word_one rune, word_str string, word_len int) bool {
+func (obj *Client) get(word_one rune) (*dataLenValue, bool) {
 	obj.lock.RLock()
-	defer obj.lock.RUnlock()
 	lenData, ok := obj.dataLen[word_one]
+	obj.lock.RUnlock()
+	return lenData, ok
+}
+func (obj *Client) add(word_one rune, word_str string, word_len int) bool {
+	lenData, ok := obj.get(word_one)
 	if !ok {
 		return ok
 	}
