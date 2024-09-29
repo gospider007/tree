@@ -34,12 +34,14 @@ func (obj *dataLenValue) Array() []int {
 
 type Client struct {
 	maxWord bool
+	minLen  int
 	dataStr map[rune]*kinds.Set[string]
 	dataLen map[rune]*dataLenValue
 	lock    sync.RWMutex
 }
 type ClientOption struct {
 	MaxWord bool
+	MinLen  int
 }
 
 func NewClient(option ...ClientOption) *Client {
@@ -49,6 +51,7 @@ func NewClient(option ...ClientOption) *Client {
 	}
 	return &Client{
 		maxWord: opt.MaxWord,
+		minLen:  opt.MinLen,
 		dataStr: make(map[rune]*kinds.Set[string]),
 		dataLen: make(map[rune]*dataLenValue),
 	}
@@ -59,9 +62,13 @@ func (obj *Client) Add(words string) {
 		return
 	}
 	wordrunes := []rune(words)
+	word_len := len(wordrunes[1:])
+	if word_len < obj.minLen {
+		return
+	}
 	word_one := wordrunes[0]
 	word_str := string(wordrunes[1:])
-	word_len := len(wordrunes[1:])
+
 	if !obj.add(word_one, word_str, word_len) {
 		obj.lock.Lock()
 		obj.dataLen[word_one] = &dataLenValue{value: kinds.NewSet(word_len), maxWord: obj.maxWord}
