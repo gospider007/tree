@@ -1,6 +1,9 @@
 package tree
 
 import (
+	"bytes"
+	"encoding/gob"
+	"os"
 	"slices"
 	"sync"
 
@@ -127,4 +130,73 @@ func (obj *Client) Search(wordstr string) map[string]int {
 		}
 	}
 	return search_dic
+}
+
+type DataLenValueClone struct {
+	MaxWord    bool
+	Value      map[int]struct{}
+	IsSort     bool
+	OrderValue []int
+}
+type ClientClone struct {
+	MaxWord bool
+	MinLen  int
+	DataStr map[rune]map[string]struct{}
+	DataLen map[rune]DataLenValueClone
+}
+
+func (obj *Client) Save(path string) error {
+	con := bytes.NewBuffer(nil)
+	encoder := gob.NewEncoder(con)
+	dataStr := make(map[rune]map[string]struct{})
+	for k, v := range obj.dataStr {
+		dataStr[k] = v.Map()
+	}
+	dataLen := make(map[rune]DataLenValueClone)
+	for k, v := range obj.dataLen {
+		dataLen[k] = DataLenValueClone{
+			MaxWord:    v.maxWord,
+			Value:      v.value.Map(),
+			IsSort:     v.isSort,
+			OrderValue: v.orderValue,
+		}
+	}
+	err := encoder.Encode(ClientClone{
+		MaxWord: obj.maxWord,
+		MinLen:  obj.minLen,
+		DataStr: dataStr,
+		DataLen: dataLen,
+	})
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(path, con.Bytes(), 0777)
+}
+func Load(path string) (*Client, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	var clientClone ClientClone
+	err = gob.NewDecoder(f).Decode(&clientClone)
+	if err != nil {
+		return nil, err
+	}
+	var client Client
+	client.maxWord = clientClone.MaxWord
+	client.minLen = clientClone.MinLen
+	client.dataStr = make(map[rune]*kinds.Set[string])
+	client.dataLen = make(map[rune]*dataLenValue)
+	for k, v := range clientClone.DataStr {
+		client.dataStr[k] = kinds.NewSetWithMap(v)
+	}
+	for k, v := range clientClone.DataLen {
+		client.dataLen[k] = &dataLenValue{
+			maxWord:    v.MaxWord,
+			value:      kinds.NewSetWithMap(v.Value),
+			isSort:     v.IsSort,
+			orderValue: v.OrderValue,
+		}
+	}
+	return &client, nil
 }
