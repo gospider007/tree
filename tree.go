@@ -1,13 +1,14 @@
 package tree
 
 import (
-	"bytes"
 	"encoding/gob"
 	"os"
 	"slices"
 	"sync"
 
 	"github.com/gospider007/kinds"
+	"github.com/gospider007/tools"
+	"github.com/klauspost/compress/zstd"
 )
 
 type dataLenValue struct {
@@ -146,8 +147,17 @@ type ClientClone struct {
 }
 
 func (obj *Client) Save(path string) error {
-	con := bytes.NewBuffer(nil)
-	encoder := gob.NewEncoder(con)
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	zs, err := zstd.NewWriter(f)
+	if err != nil {
+		return err
+	}
+	defer zs.Close()
+	encoder := gob.NewEncoder(zs)
 	dataStr := make(map[rune]map[string]struct{})
 	for k, v := range obj.dataStr {
 		dataStr[k] = v.Map()
@@ -161,22 +171,24 @@ func (obj *Client) Save(path string) error {
 			OrderValue: v.orderValue,
 		}
 	}
-	err := encoder.Encode(ClientClone{
+	return encoder.Encode(ClientClone{
 		MaxWord: obj.maxWord,
 		MinLen:  obj.minLen,
 		DataStr: dataStr,
 		DataLen: dataLen,
 	})
-	if err != nil {
-		return err
-	}
-	return os.WriteFile(path, con.Bytes(), 0777)
 }
 func Load(path string) (*Client, error) {
-	f, err := os.Open(path)
+	f2, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
+	defer f2.Close()
+	f, err := tools.CompressionDecode(f2, "zstd")
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
 	var clientClone ClientClone
 	err = gob.NewDecoder(f).Decode(&clientClone)
 	if err != nil {
