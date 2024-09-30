@@ -1,10 +1,11 @@
 package tree
 
 import (
-	"encoding/json"
 	"os"
 	"slices"
 	"sync"
+
+	json "github.com/json-iterator/go"
 
 	"github.com/gospider007/kinds"
 	"github.com/gospider007/tools"
