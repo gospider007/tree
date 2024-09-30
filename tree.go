@@ -1,7 +1,7 @@
 package tree
 
 import (
-	"encoding/gob"
+	"encoding/json"
 	"os"
 	"slices"
 	"sync"
@@ -134,16 +134,16 @@ func (obj *Client) Search(wordstr string) map[string]int {
 }
 
 type DataLenValueClone struct {
-	MaxWord    bool
-	Value      map[int]struct{}
-	IsSort     bool
-	OrderValue []int
+	MaxWord    bool             `json:"MaxWord"`
+	Value      map[int]struct{} `json:"Value"`
+	IsSort     bool             `json:"IsSort"`
+	OrderValue []int            `json:"OrderValue"`
 }
 type ClientClone struct {
-	MaxWord bool
-	MinLen  int
-	DataStr map[rune]map[string]struct{}
-	DataLen map[rune]DataLenValueClone
+	MaxWord bool                         `json:"MaxWord"`
+	MinLen  int                          `json:"MinLen"`
+	DataStr map[rune]map[string]struct{} `json:"DataStr"`
+	DataLen map[rune]DataLenValueClone   `json:"DataLen"`
 }
 
 func (obj *Client) Save(path string) error {
@@ -157,7 +157,8 @@ func (obj *Client) Save(path string) error {
 		return err
 	}
 	defer zs.Close()
-	encoder := gob.NewEncoder(zs)
+	// encoder := gob.NewEncoder(zs)
+	encoder := json.NewEncoder(zs)
 	dataStr := make(map[rune]map[string]struct{})
 	for k, v := range obj.dataStr {
 		dataStr[k] = v.Map()
@@ -190,7 +191,9 @@ func Load(path string) (*Client, error) {
 	}
 	defer f.Close()
 	var clientClone ClientClone
-	err = gob.NewDecoder(f).Decode(&clientClone)
+	decoder := json.NewDecoder(f)
+	// err = gob.NewDecoder(f).Decode(&clientClone)
+	err = decoder.Decode(&clientClone)
 	if err != nil {
 		return nil, err
 	}
