@@ -12,6 +12,67 @@ import (
 	"github.com/klauspost/compress/zstd"
 )
 
+// TrieNode 定义前缀树节点
+type TrieNode struct {
+	children map[rune]*TrieNode // 子节点
+	isEnd    bool               // 是否是单词结尾
+}
+
+// Trie 定义前缀树结构
+type Trie struct {
+	root *TrieNode // 根节点
+}
+
+// NewTrieNode 创建一个新的 TrieNode
+func NewTrieNode() *TrieNode {
+	return &TrieNode{
+		children: make(map[rune]*TrieNode),
+	}
+}
+
+// NewTrie 创建一个新的 Trie
+func NewTrie() *Trie {
+	return &Trie{
+		root: NewTrieNode(),
+	}
+}
+
+// Insert 向前缀树中插入单词
+func (t *Trie) Insert(word string) {
+	current := t.root
+	for _, char := range word {
+		if _, exists := current.children[char]; !exists {
+			current.children[char] = NewTrieNode()
+		}
+		current = current.children[char]
+	}
+	current.isEnd = true
+}
+
+// Search 检查单词是否在前缀树中
+func (t *Trie) Search(word string) bool {
+	current := t.root
+	for _, char := range word {
+		if _, exists := current.children[char]; !exists {
+			return false
+		}
+		current = current.children[char]
+	}
+	return current.isEnd
+}
+
+// StartsWith 检查是否有以 prefix 开头的单词
+func (t *Trie) StartsWith(prefix string) bool {
+	current := t.root
+	for _, char := range prefix {
+		if _, exists := current.children[char]; !exists {
+			return false
+		}
+		current = current.children[char]
+	}
+	return true
+}
+
 type dataLenValue struct {
 	maxWord    bool
 	value      *kinds.Set[int]
@@ -158,7 +219,6 @@ func (obj *Client) Save(path string) error {
 		return err
 	}
 	defer zs.Close()
-	// encoder := gob.NewEncoder(zs)
 	encoder := json.NewEncoder(zs)
 	dataStr := make(map[rune]map[string]struct{})
 	for k, v := range obj.dataStr {
@@ -193,7 +253,6 @@ func Load(path string) (*Client, error) {
 	defer f.Close()
 	var clientClone ClientClone
 	decoder := json.NewDecoder(f)
-	// err = gob.NewDecoder(f).Decode(&clientClone)
 	err = decoder.Decode(&clientClone)
 	if err != nil {
 		return nil, err
