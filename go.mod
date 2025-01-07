@@ -4,7 +4,7 @@ go 1.23.0
 
 require (
 	github.com/gospider007/kinds v0.0.0-20240929092451-8f867acde255
-	github.com/gospider007/tools v0.0.0-20241216141313-4a832f55a843
+	github.com/gospider007/tools v0.0.0-20250107090942-5b406ab8a72b
 	github.com/json-iterator/go v1.1.12
 	github.com/klauspost/compress v1.17.11
 )
@@ -21,7 +21,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/klauspost/pgzip v1.2.6 // indirect
-	github.com/mholt/archives v0.0.0-20241226194006-fc8400ac3529 // indirect
+	github.com/mholt/archives v0.1.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/nwaples/rardecode/v2 v2.0.1 // indirect
@@ -31,6 +31,6 @@ require (
 	github.com/ulikunitz/xz v0.5.12 // indirect
 	go4.org v0.0.0-20230225012048-214862532bf5 // indirect
 	golang.org/x/image v0.23.0 // indirect
-	golang.org/x/net v0.33.0 // indirect
+	golang.org/x/net v0.34.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 )
