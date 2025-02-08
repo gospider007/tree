@@ -1,6 +1,7 @@
 package tree
 
 import (
+	"context"
 	"os"
 	"slices"
 	"sync"
@@ -185,7 +186,7 @@ func Load(path string) (*Client, error) {
 		return nil, err
 	}
 	defer f2.Close()
-	f, err := tools.CompressionDecode(f2, "zstd")
+	f, err := tools.CompressionDecode(context.TODO(), f2, "zstd")
 	if err != nil {
 		return nil, err
 	}
