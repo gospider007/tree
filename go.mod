@@ -6,7 +6,7 @@ require (
 	github.com/gospider007/kinds v0.0.0-20240929092451-8f867acde255
 	github.com/gospider007/tools v0.0.0-20250107090942-5b406ab8a72b
 	github.com/json-iterator/go v1.1.12
-	github.com/klauspost/compress v1.17.11
+	github.com/klauspost/compress v1.18.0
 )
 
 require (
