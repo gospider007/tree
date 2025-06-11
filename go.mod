@@ -30,7 +30,7 @@ require (
 	github.com/therootcompany/xz v1.0.1 // indirect
 	github.com/ulikunitz/xz v0.5.12 // indirect
 	go4.org v0.0.0-20230225012048-214862532bf5 // indirect
-	golang.org/x/image v0.27.0 // indirect
-	golang.org/x/net v0.40.0 // indirect
-	golang.org/x/text v0.25.0 // indirect
+	golang.org/x/image v0.28.0 // indirect
+	golang.org/x/net v0.41.0 // indirect
+	golang.org/x/text v0.26.0 // indirect
 )
