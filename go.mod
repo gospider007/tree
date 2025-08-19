@@ -3,8 +3,8 @@ module github.com/gospider007/tree
 go 1.25
 
 require (
-	github.com/gospider007/kinds v0.0.0-20250217075226-10f199f7215d
-	github.com/gospider007/tools v0.0.0-20250711035142-241d6041da43
+	github.com/gospider007/kinds v0.0.0-20250815031133-b2282666f69c
+	github.com/gospider007/tools v0.0.0-20250815031258-8a81d680917c
 	github.com/json-iterator/go v1.1.12
 	github.com/klauspost/compress v1.18.0
 )
@@ -16,7 +16,7 @@ require (
 	github.com/bodgit/sevenzip v1.6.1 // indirect
 	github.com/bodgit/windows v1.0.1 // indirect
 	github.com/dsnet/compress v0.0.2-0.20230904184137-39efe44ab707 // indirect
-	github.com/gospider007/re v0.0.0-20250217075352-bcb79f285d6c // indirect
+	github.com/gospider007/re v0.0.0-20250815031101-a57caeff73bf // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/klauspost/pgzip v1.2.6 // indirect
 	github.com/mholt/archives v0.1.3 // indirect
