@@ -1,7 +1,6 @@
 package tree
 
 import (
-	"context"
 	"os"
 	"slices"
 	"sync"
@@ -10,7 +9,6 @@ import (
 
 	"github.com/gospider007/kinds"
 	"github.com/gospider007/tools"
-	"github.com/klauspost/compress/zstd"
 )
 
 type dataLenValue struct {
@@ -154,7 +152,12 @@ func (obj *Client) Save(path string) error {
 		return err
 	}
 	defer f.Close()
-	zs, err := zstd.NewWriter(f)
+
+	arch, err := tools.NewCompression("zstd")
+	if err != nil {
+		return err
+	}
+	zs, err := arch.OpenWriter(f)
 	if err != nil {
 		return err
 	}
@@ -186,7 +189,11 @@ func Load(path string) (*Client, error) {
 		return nil, err
 	}
 	defer f2.Close()
-	f, err := tools.CompressionDecode(context.TODO(), f2, "zstd")
+	arch, err := tools.NewCompression("zstd")
+	if err != nil {
+		return nil, err
+	}
+	f, err := arch.OpenReader(f2)
 	if err != nil {
 		return nil, err
 	}
