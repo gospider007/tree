@@ -1,6 +1,6 @@
 module github.com/gospider007/tree
 
-go 1.26.0
+go 1.27.0
 
 require (
 	github.com/gospider007/kinds v0.0.0-20260211060834-06a10e2431d8
